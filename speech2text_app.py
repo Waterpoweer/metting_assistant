@@ -3,6 +3,7 @@ from simple_llm import llm
 import gradio as gr
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
+from langchain.llms import HuggingFaceHub
 import torch
 import os
 
