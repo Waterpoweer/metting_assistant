@@ -41,7 +41,7 @@ def fgd(speech) :
 
 
 
-audio_input = gr.Audio(sources=["upload","microphone"] ,  type="filepath")  # Audio input
+audio_input = gr.Audio(sources="upload" ,  type="filepath")  # Audio input
 output_text = gr.Textbox()  # Text output
 
 # Create the Gradio interface with the function, inputs, and outputs
