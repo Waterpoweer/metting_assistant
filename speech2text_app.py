@@ -28,27 +28,42 @@ pt = PromptTemplate(
 
 prompt_to_LLAMA2 = LLMChain(llm=llm, prompt=pt)
 
-def fgd(speech) :
+with gr.Blocks() as demo:
+    gr.Markdown(" 🎤 REDA Transcription App")
 
-    transcrib = ASR(speech)
+    choice = gr.Radio(
+        choices=["📁 Upload", "🎙️ Record"],
+        value="📁 Upload",
+        label="Choose Input Method"
+    )
 
+    upload_input = gr.Audio(sources=["upload"], type="filepath", visible=True)
+    mic_input = gr.Audio(sources=["microphone"], type="filepath", visible=False)
 
+    # Show/hide based on choice
+    def toggle(choice):
+        if choice == "📁 Upload":
+            return gr.update(visible=True), gr.update(visible=False)
+        else:
+            return gr.update(visible=False), gr.update(visible=True)
 
-    result = prompt_to_LLAMA2.run(transcrib)
+    choice.change(fn=toggle, inputs=choice, outputs=[upload_input, mic_input])
 
-    return result
+    submit_btn = gr.Button("Submit")
+    output = gr.Textbox(label="Result")
 
+    def fgd_combined(upload, mic, choice):
+        speech = upload if choice == "📁 Upload" else mic
+        if speech is None:
+            return "⚠️ Please provide an audio file first."
+        transcrib = ASR(speech)
+        result = prompt_to_LLAMA2.run(transcrib)
+        return result
 
+    submit_btn.click(
+        fn=fgd_combined,
+        inputs=[upload_input, mic_input, choice],
+        outputs=output
+    )
 
-
-audio_input = gr.Audio(sources="upload" ,  type="filepath")  # Audio input
-output_text = gr.Textbox()  # Text output
-
-# Create the Gradio interface with the function, inputs, and outputs
-iface = gr.Interface(fn=fgd, 
-                     inputs=audio_input, outputs=output_text, 
-                     title="REDA Transcription App",
-                     description="Upload the audio file")
-
-# Launch the Gradio app
-iface.launch(debug = True  ,  share=True)
+demo.launch(debug=True, share=True)

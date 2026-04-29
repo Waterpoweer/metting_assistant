@@ -2,17 +2,17 @@ import torch
 from transformers import pipeline
 
 
-  
-  # Initialize the speech-to-text pipeline from Hugging Face Transformers
-  # This uses the "openai/whisper-tiny.en" model for automatic speech recognition (ASR)
-  # The `chunk_length_s` parameter specifies the chunk length in seconds for processing
-  pipe = pipeline(
-    "automatic-speech-recognition",
-    model="openai/whisper-tiny.en",
-    chunk_length_s=30,
-  )
 
-  def ASR(audio):
+# Initialize the speech-to-text pipeline from Hugging Face Transformers
+# This uses the "openai/whisper-tiny.en" model for automatic speech recognition (ASR)
+# The `chunk_length_s` parameter specifies the chunk length in seconds for processing
+pipe = pipeline(
+"automatic-speech-recognition",
+model="openai/whisper-tiny.en",
+chunk_length_s=30,
+)
+
+def ASR(audio):
     sample = audio
 
     # Perform speech recognition on the audio file
